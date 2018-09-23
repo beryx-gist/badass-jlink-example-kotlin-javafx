@@ -9,7 +9,7 @@ by creating a custom runtime image of a JavaFX application written in Kotlin.
 
 ### Quick start
 From the [releases page](https://github.com/beryx-gist/badass-jlink-example-kotlin-javafx/releases) download the archived custom runtime image for your operating system.
-Unpack the archive and execute the `hello` script found in the `hello-image/bin` directory.  
+Unpack the archive and execute the `hello` script found in the `image/bin` directory.  
 
 ### Creating a custom runtime image
 
@@ -20,7 +20,7 @@ To create the custom runtime image execute:
 ./gradlew jlinkZip
 ```
 
-This command creates the runtime image in the `build/hello-image` directory and a zip file of it in `build/image-zip`.
+This command creates the runtime image in the `build/image` directory and a zip file of it in `build/image-zip`.
 
-The start scripts are found in the `build/hello-image/bin` directory.
+The start scripts are found in the `build/image/bin` directory.
 
