@@ -5,7 +5,7 @@
 ## Example of using the badass-jlink plugin with Kotlin and JavaFX ##
 
 This project demonstrates the capabilities of the [Badass JLink Plugin](https://github.com/beryx/badass-jlink-plugin/)
-by creating a custom runtime image of a JavaFX aplication written in Kotlin.
+by creating a custom runtime image of a JavaFX application written in Kotlin.
 
 ### Quick start
 From the [releases page](https://github.com/beryx-gist/badass-jlink-example-kotlin-javafx/releases) download the archived custom runtime image for your operating system.
