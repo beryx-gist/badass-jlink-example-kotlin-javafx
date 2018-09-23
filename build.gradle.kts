@@ -1,10 +1,11 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+
 plugins {
     kotlin("jvm") version "1.2.70"
     application
     id("com.zyxist.chainsaw") version "0.3.1"
-    id("org.beryx.jlink") version "1.4.3"
+    id("org.beryx.jlink") version "1.4.4"
 }
 
 val currentOS = org.gradle.internal.os.OperatingSystem.current()
