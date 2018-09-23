@@ -1,0 +1,161 @@
+plugins {
+    id 'java-gradle-plugin'
+    id 'groovy'
+    id "com.gradle.plugin-publish" version "0.9.10"
+    id "com.github.ethankhall.semantic-versioning" version "1.1.0"
+    id "com.github.ben-manes.versions" version "0.13.0"
+    id 'com.github.jk1.dependency-license-report' version '0.3.8'
+    id "com.github.hierynomus.license" version "0.14.0"
+    id "org.asciidoctor.convert" version "1.5.8.1"
+    id "org.ajoberstar.git-publish" version "1.0.1"
+}
+
+project.version.with {
+    major = badassJlinkPluginVersionMajor as int
+    minor= badassJlinkPluginVersionMinor as int
+    patch = badassJlinkPluginVersionPatch as int
+    if (project.hasProperty('badassJlinkPluginVersionLabel')) {
+        preRelease = badassJlinkPluginVersionLabel
+    }
+    releaseBuild = Boolean.valueOf(badassJlinkPluginReleaseBuild)
+}
+ext.badassJlinkPluginVersion = project.version as String
+ext.badassJlinkPluginTag = Boolean.valueOf(badassJlinkPluginReleaseBuild) ? "v$ext.badassJlinkPluginVersion" : 'master'
+
+group = 'org.beryx'
+version = badassJlinkPluginVersion
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+
+def defaultEncoding = 'UTF-8'
+[compileJava, compileTestJava]*.options*.encoding = defaultEncoding
+
+[compileGroovy, compileTestGroovy]*.options*.encoding = defaultEncoding
+[compileGroovy, compileTestGroovy]*.groovyOptions*.encoding = defaultEncoding
+
+task licenseCheckGroovy(type: com.hierynomus.gradle.license.tasks.LicenseCheck) {
+    source = fileTree(dir: "src").include("**/*.groovy")
+}
+tasks.license.dependsOn licenseCheckGroovy
+
+license {
+    header rootProject.file("license-header.txt")
+    skipExistingHeaders true
+    ignoreFailures false
+    excludes (['**/*.properties', '**/hello/'])
+}
+
+configurations {
+    compile {transitive = true}
+}
+
+dependencies {
+    compile gradleTestKit()
+    compile localGroovy()
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+
+    testCompile('org.spockframework:spock-core:1.1-groovy-2.4') {
+        exclude module: 'groovy-all'
+    }
+    testCompile 'cglib:cglib-nodep:3.2.4'
+    testCompile 'org.objenesis:objenesis:2.4'
+    testCompile('com.athaydes:spock-reports:1.2.13') { transitive = false}
+}
+
+gradlePlugin {
+    plugins {
+        jlink {
+            id = 'org.beryx.jlink'
+            implementationClass = 'org.beryx.jlink.JlinkPlugin'
+        }
+    }
+}
+pluginBundle {
+    website = 'https://github.com/beryx/badass-jlink-plugin/'
+    vcsUrl = 'https://github.com/beryx/badass-jlink-plugin'
+    description = 'A Gradle plugin that assembles your modules into a custom runtime image'
+    tags = ['jlink', 'jpms', 'image']
+
+    plugins {
+        jlink {
+            id = 'org.beryx.jlink'
+            displayName = 'Badass JLink Plugin'
+        }
+    }
+}
+
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': "${project.archivesBaseName}",
+                'Implementation-Version': badassJlinkPluginVersion
+    }
+}
+
+test {
+    testLogging {
+        exceptionFormat = 'full'
+    }
+}
+
+asciidoctor {
+    sourceDir = file("doc")
+    sources {include 'index.adoc'}
+    logDocuments = true
+    attributes 'source-highlighter': 'coderay',
+            'coderay-linenums-mode': 'table',
+            icons: 'font',
+            imagesdir: 'img',
+            'data-uri': '',
+            linkattrs: true,
+            linkcss: true,
+            'git-tag': badassJlinkPluginTag,
+            'blob-root': "https://github.com/beryx/badass-jlink-plugin/blob/$badassJlinkPluginTag"
+}
+
+gitPublish {
+    repoUri = 'https://github.com/beryx/badass-jlink-plugin.git'
+    branch = 'gh-pages'
+
+    contents {
+        def pgType = project.hasProperty('ghPageType') ? ghPageType : 'latest'
+        if(pgType == 'init') {
+            from file("ghpages")
+        } else if(pgType == 'list') {
+            from file("build/release-list")
+        } else {
+            from file("${asciidoctor.outputDir.path}/html5")
+            from file("build/docs")
+        }
+        def docDir = Boolean.valueOf(badassJlinkPluginReleaseBuild) ? 'releases' : 'snapshots'
+        if(pgType == 'init') {
+            into "."
+        } else if(pgType == 'list') {
+            into "."
+            preserve {
+                include '**'
+                exclude "releases.md"
+            }
+        } else if(pgType == 'version') {
+            gitPublishPush.enabled = (docDir != 'snapshots')
+            into "$docDir/$badassJlinkPluginVersion"
+
+            preserve {
+                include '**'
+                exclude "$docDir/$badassJlinkPluginVersion"
+            }
+        } else {
+            into "$docDir/latest"
+
+            preserve {
+                include '**'
+                exclude "$docDir/latest"
+            }
+        }
+    }
+}
