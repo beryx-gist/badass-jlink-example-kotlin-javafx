@@ -7,6 +7,15 @@ plugins {
     id("org.beryx.jlink") version "1.4.3"
 }
 
+val currentOS = org.gradle.internal.os.OperatingSystem.current()
+val platform = when {
+        currentOS.isWindows() -> "win"
+        currentOS.isLinux() -> "linux"
+        currentOS.isMacOsX() -> "mac"
+        else -> throw GradleException("Unsupported operating system: $currentOS")
+}
+val javaFxVersion = 11
+
 //Fixes module compilation for Kotlin in "com.zyxist.chainsaw"
 val compileKotlin: KotlinCompile by tasks
 val compileJava: JavaCompile by tasks
@@ -22,4 +31,8 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.2.70")
+    implementation("org.openjfx:javafx-base:${javaFxVersion}:${platform}")
+    implementation("org.openjfx:javafx-controls:${javaFxVersion}:${platform}")
+    implementation("org.openjfx:javafx-fxml:${javaFxVersion}:${platform}")
+    implementation("org.openjfx:javafx-graphics:${javaFxVersion}:${platform}")
 }
