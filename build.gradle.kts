@@ -37,3 +37,8 @@ dependencies {
     implementation("org.openjfx:javafx-fxml:${javaFxVersion}:${platform}")
     implementation("org.openjfx:javafx-graphics:${javaFxVersion}:${platform}")
 }
+
+jlink {
+    launcherName.set("hello")
+    imageZip.set(project.file("${project.buildDir}/image-zip/hello-image.zip"))
+}
