@@ -2,10 +2,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.beryx.jlink.data.*
 
 plugins {
-    kotlin("jvm") version "1.2.70"
+    kotlin("jvm") version "1.3.0"
     application
     id("com.zyxist.chainsaw") version "0.3.1"
-    id("org.beryx.jlink") version "2.0.1"
+    id("org.beryx.jlink") version "2.1.2"
 }
 
 val currentOS = org.gradle.internal.os.OperatingSystem.current()
@@ -31,18 +31,14 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.2.70")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.3.0")
     implementation("org.openjfx:javafx-base:${javaFxVersion}:${platform}")
-    implementation("org.openjfx:javafx-controls:${javaFxVersion}:${platform}") {
-        exclude(module = "javafx-graphics")
-    }
-    implementation("org.openjfx:javafx-fxml:${javaFxVersion}:${platform}") {
-        exclude(module = "javafx-controls")
-    }
-    implementation("org.openjfx:javafx-graphics:${javaFxVersion}:${platform}") {
-        exclude(module = "javafx-base")
-    }
+    implementation("org.openjfx:javafx-controls:${javaFxVersion}:${platform}")
+    implementation("org.openjfx:javafx-fxml:${javaFxVersion}:${platform}")
+    implementation("org.openjfx:javafx-graphics:${javaFxVersion}:${platform}")
 }
+
+javaModule.setName("test.kotlin")
 
 jlink{
     launcher (delegateClosureOf<LauncherData> {
