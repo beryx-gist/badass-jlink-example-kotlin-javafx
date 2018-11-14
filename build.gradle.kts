@@ -23,7 +23,7 @@ val compileJava: JavaCompile by tasks
 compileJava.destinationDir = compileKotlin.destinationDir
 
 application {
-    mainClassName = "org.beryx.jlink.test.kotlin.JavaFX"
+    mainClassName = "test.kotlin/org.beryx.jlink.test.kotlin.JavaFX"
 }
 
 repositories {
