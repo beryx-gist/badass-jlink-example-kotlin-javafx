@@ -4,8 +4,8 @@ import org.beryx.jlink.data.*
 plugins {
     kotlin("jvm") version "1.3.0"
     application
-    id("com.zyxist.chainsaw") version "0.3.1"
-    id("org.beryx.jlink") version "2.1.2"
+    id("org.javamodularity.moduleplugin") version "1.1.1"
+    id("org.beryx.jlink") version "2.1.3"
 }
 
 val currentOS = org.gradle.internal.os.OperatingSystem.current()
@@ -37,8 +37,6 @@ dependencies {
     implementation("org.openjfx:javafx-fxml:${javaFxVersion}:${platform}")
     implementation("org.openjfx:javafx-graphics:${javaFxVersion}:${platform}")
 }
-
-javaModule.setName("test.kotlin")
 
 jlink{
     launcher (delegateClosureOf<LauncherData> {
