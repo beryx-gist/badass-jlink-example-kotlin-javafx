@@ -2,10 +2,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.beryx.jlink.data.*
 
 plugins {
-    kotlin("jvm") version "1.3.0"
+    kotlin("jvm") version "1.3.10"
     application
     id("org.javamodularity.moduleplugin") version "1.1.1"
-    id("org.beryx.jlink") version "2.1.3"
+    id("org.beryx.jlink") version "2.1.5"
 }
 
 val currentOS = org.gradle.internal.os.OperatingSystem.current()
@@ -31,7 +31,7 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.3.0")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.3.10")
     implementation("org.openjfx:javafx-base:${javaFxVersion}:${platform}")
     implementation("org.openjfx:javafx-controls:${javaFxVersion}:${platform}")
     implementation("org.openjfx:javafx-fxml:${javaFxVersion}:${platform}")
