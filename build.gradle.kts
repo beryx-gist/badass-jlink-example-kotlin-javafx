@@ -17,7 +17,6 @@ val platform = when {
 }
 val javaFxVersion = 11
 
-//Fixes module compilation for Kotlin in "com.zyxist.chainsaw"
 val compileKotlin: KotlinCompile by tasks
 val compileJava: JavaCompile by tasks
 compileJava.destinationDir = compileKotlin.destinationDir
